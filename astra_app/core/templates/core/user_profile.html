@@ -55,14 +55,14 @@
         <div class="card-body text-center">
           <div class="d-none d-md-block">
             {% if profile_avatar_user.email %}
-              {% avatar profile_avatar_user 220 class="img-fluid img-circle mb-3" style="width:220px;height:220px;object-fit:cover;" alt="Avatar" %}
+              {% avatar profile_avatar_user 220 class="img-fluid img-circle mb-3" style="width:220px;aspect-ratio:1 / 1;object-fit:cover;" alt="Avatar" %}
             {% else %}
               <i class="far fa-user" style="font-size:140px;"></i>
             {% endif %}
           </div>
           <div class="d-md-none">
             {% if profile_avatar_user.email %}
-              {% avatar profile_avatar_user 140 class="img-fluid img-circle mb-3" style="width:140px;height:140px;object-fit:cover;" alt="Avatar" %}
+              {% avatar profile_avatar_user 140 class="img-fluid img-circle mb-3" style="width:140px;aspect-ratio:1 / 1;object-fit:cover;" alt="Avatar" %}
             {% else %}
               <i class="far fa-user" style="font-size:90px;"></i>
             {% endif %}
