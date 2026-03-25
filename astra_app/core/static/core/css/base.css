@@ -595,6 +595,12 @@ a.alx-status-badge:focus-visible {
   background: rgba(0, 0, 0, 0.02);
 }
 
+/* Prevent sidebar labels from wrapping during collapse/expand transitions. */
+.nav-sidebar .nav-link p {
+  text-wrap-mode: nowrap;
+  white-space: nowrap;
+}
+
 /* Sidebar brand image opacity */
 .main-sidebar .brand-image {
   opacity: .8;

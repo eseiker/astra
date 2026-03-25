@@ -97,3 +97,43 @@ class ProfileAvatarRenderingTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("gravatar.com/avatar", response.content.decode("utf-8"))
+
+    @override_settings(
+        FREEIPA_HOST="ipa.test",
+        FREEIPA_VERIFY_SSL=False,
+        FREEIPA_SERVICE_USER="svc",
+        FREEIPA_SERVICE_PASSWORD="pw",
+        AVATAR_PROVIDERS=(
+            "avatar.providers.GravatarAvatarProvider",
+            "avatar.providers.DefaultAvatarProvider",
+        ),
+    )
+    def test_profile_avatar_uses_square_aspect_ratio_without_fixed_height(self) -> None:
+        factory = RequestFactory()
+        request = factory.get("/")
+        self._add_session_and_messages(request)
+        request.user = self._auth_user(email="a@example.org")
+
+        fu = FreeIPAUser(
+            "alice",
+            user_data={
+                "uid": ["alice"],
+                "mail": ["a@example.org"],
+                "givenname": ["Alice"],
+                "sn": ["User"],
+                "memberof_group": [],
+            },
+        )
+
+        with patch("core.views_users._get_full_user", autospec=True) as mocked_get_full_user:
+            mocked_get_full_user.return_value = fu
+            response = views_users.user_profile(request, "alice")
+
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode("utf-8")
+        self.assertIn("width:220px;", content)
+        self.assertIn("width:140px;", content)
+        self.assertIn("object-fit:cover;", content)
+        self.assertIn("aspect-ratio: 1 / 1", content)
+        self.assertNotIn("height:220px", content)
+        self.assertNotIn("height:140px", content)
